@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0B1F33">
+  <meta name="description" content="Sentinel Workspace archive">
+  <title>Sentinel Workspace</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Przejdź do treści</a>
+
+<section id="accessScreen" class="access-screen">
+  <div class="access-card">
+    <div class="access-brand"><span class="sentinel-mark">S</span><div><b>SENTINEL</b><small>DYNAMICS</small></div></div>
+    <div class="access-product">WORKSPACE / ARCHIVE ACCESS</div>
+    <h1 data-i18n="accessTitle">Odzyskiwanie zarchiwizowanego obszaru</h1>
+    <p data-i18n="accessLead">Zasób nie jest dostępny w standardowym indeksie dokumentów. Podaj dane dokumentu źródłowego.</p>
+    <form id="accessForm" novalidate>
+      <label for="location" data-i18n="location">LOKALIZACJA</label>
+      <input id="location" autocomplete="off" aria-describedby="locationError">
+      <div id="locationError" class="field-error"></div>
+      <label for="author" data-i18n="author">AUTOR PIERWOTNEJ WERSJI</label>
+      <input id="author" autocomplete="off" maxlength="3" aria-describedby="authorError">
+      <div id="authorError" class="field-error"></div>
+      <label for="version" data-i18n="sourceVersion">WERSJA ŹRÓDŁOWA</label>
+      <input id="version" autocomplete="off" inputmode="decimal" aria-describedby="versionError">
+      <div id="versionError" class="field-error"></div>
+      <button class="primary wide" type="submit" data-i18n="restore">ODZYSKAJ ARCHIWUM</button>
+    </form>
+    <div class="access-footer"><span>SECURE ARCHIVE GATEWAY</span><span>READ ONLY</span></div>
+  </div>
+  <div class="access-lang"><button data-set-lang="pl">PL</button><button data-set-lang="en">EN</button></div>
+</section>
+
+<div id="restoreOverlay" class="restore-overlay hidden" role="status" aria-live="polite">
+  <div class="spinner"></div><b data-i18n="restoring">ODTWARZANIE INDEKSU DOKUMENTÓW</b><span>DC03 / SECURITY OPERATIONS</span>
+</div>
+
+<div id="workspace" class="workspace hidden">
+  <header class="topbar">
+    <button class="brand" data-view="home"><span class="sentinel-mark small">S</span><span><b>SENTINEL</b><small>WORKSPACE</small></span></button>
+    <div class="global-search"><span>⌕</span><input id="globalSearch" data-i18n-placeholder="searchPlaceholder" placeholder="Przeszukaj Sentinel Workspace..."><button id="searchBtn" aria-label="Search">↵</button></div>
+    <div class="top-actions"><button id="helpBtn" class="icon-btn">?</button><select id="lang"><option value="pl">PL</option><option value="en">EN</option></select><button class="avatar" title="Limited archive session">NW</button></div>
+  </header>
+
+  <aside class="sidebar">
+    <nav>
+      <button class="nav active" data-view="home"><i>⌂</i><span data-i18n="home">STRONA GŁÓWNA</span></button>
+      <button class="nav" data-view="documents"><i>▤</i><span data-i18n="documents">DOKUMENTY</span></button>
+      <button class="nav" data-view="archives"><i>▣</i><span data-i18n="archives">ARCHIWA</span></button>
+      <button class="nav" data-view="security"><i>◆</i><span data-i18n="security">BEZPIECZEŃSTWO</span></button>
+      <button class="nav" data-view="meetings"><i>▶</i><span data-i18n="meetings">SPOTKANIA</span></button>
+      <button class="nav" data-view="recovered"><i>↻</i><span data-i18n="recovered">ODZYSKANE</span><em id="recoveredBadge">2</em></button>
+    </nav>
+    <div class="session-info"><b>DC03-SECOPS</b><span data-i18n="readOnly">Dostęp tylko do odczytu</span><small>SESSION / NW-ARCHIVE</small></div>
+  </aside>
+
+  <main id="main" tabindex="-1">
+    <section id="view-home" class="view active">
+      <div class="breadcrumbs">Workspace / <b>DC03 Security Operations</b></div>
+      <div class="page-head"><div><h1>DC03 / Security Operations</h1><p data-i18n="workspaceLead">Zarchiwizowany obszar roboczy · Dostęp tylko do odczytu</p></div><span class="archive-chip">ARCHIVED</span></div>
+      <div class="stats"><article><span data-i18n="documents">DOKUMENTY</span><b>7</b></article><article><span data-i18n="archives">ARCHIWA</span><b>3</b></article><article><span data-i18n="recoveredItems">ODZYSKANE ELEMENTY</span><b>2</b></article><article><span data-i18n="unresolvedTokens">NIEROZPOZNANE TOKENY</span><b id="tokenCount">1</b></article></div>
+      <div class="warning-card"><div class="warn-icon">!</div><div><b data-i18n="indexWarning">Niektóre indeksowane rekordy są niedostępne.</b><p data-i18n="backupDetected">Wykryto nieindeksowaną kopię testową.</p></div><button class="secondary" data-open-folder="sandbox_old" data-i18n="viewRecovery">POKAŻ OPCJE ODZYSKIWANIA</button></div>
+      <div class="grid-2"><div class="panel"><div class="panel-title"><b data-i18n="recentActivity">OSTATNIA AKTYWNOŚĆ</b></div><div class="activity" id="activityList"></div></div><div class="panel"><div class="panel-title"><b data-i18n="quickAccess">SZYBKI DOSTĘP</b></div><div class="quick"><button data-view="archives">DC03 Operations</button><button data-open-folder="sandbox_old">sandbox_old <span>UNINDEXED</span></button><button data-view="meetings">Global Security Review</button><button data-view="security">Privileged Tokens</button></div></div></div>
+    </section>
+
+    <section id="view-documents" class="view">
+      <div class="breadcrumbs">Workspace / <b data-i18n="documents">Dokumenty</b></div>
+      <div class="page-head"><div><h1 data-i18n="documents">DOKUMENTY</h1><p data-i18n="documentLead">Raporty, szkice i aktywność wydruków.</p></div></div>
+      <div class="toolbar"><button class="filter active" data-doc-tab="library" data-i18n="library">BIBLIOTEKA</button><button class="filter" data-doc-tab="print" data-i18n="printActivity">AKTYWNOŚĆ WYDRUKÓW</button><button class="filter" data-doc-tab="drafts" data-i18n="drafts">SZKICE</button></div>
+      <div id="docLibrary" class="panel table-wrap"></div>
+      <div id="printActivity" class="panel hidden content-pad"><h2 data-i18n="printSearch">Wyszukaj zadanie wydruku</h2><div class="inline-search"><input id="printSearchInput" placeholder="44318"><button id="printSearchBtn" class="primary" data-i18n="search">SZUKAJ</button></div><div id="printResult" role="status" aria-live="polite"></div></div>
+      <div id="drafts" class="panel hidden content-pad"></div>
+    </section>
+
+    <section id="view-archives" class="view">
+      <div class="breadcrumbs">Workspace / <b data-i18n="archives">Archiwa</b></div>
+      <div class="page-head"><div><h1 data-i18n="archives">ARCHIWA</h1><p data-i18n="archiveLead">Kopie operacyjne i materiały infrastruktury.</p></div></div>
+      <div class="folder-grid" id="archiveFolders"></div>
+    </section>
+
+    <section id="view-folder" class="view">
+      <div class="breadcrumbs" id="folderBreadcrumb"></div>
+      <div class="page-head"><div><h1 id="folderTitle"></h1><p id="folderMeta"></p></div><div id="folderTags"></div></div>
+      <div id="folderNotice"></div><div id="folderFiles" class="panel table-wrap"></div>
+    </section>
+
+    <section id="view-file" class="view">
+      <div class="breadcrumbs" id="fileBreadcrumb"></div>
+      <div class="page-head"><div><h1 id="fileTitle"></h1><p id="fileMeta"></p></div><button id="detailsBtn" class="secondary" data-i18n="details">SZCZEGÓŁY</button></div>
+      <div id="fileContent"></div>
+    </section>
+
+    <section id="view-security" class="view">
+      <div class="breadcrumbs">Workspace / <b data-i18n="security">Bezpieczeństwo</b></div>
+      <div class="page-head"><div><h1 data-i18n="privilegedTokens">TOKENY UPRZYWILEJOWANE</h1><p data-i18n="tokenLead">Aktywne identyfikatory operacyjne.</p></div></div>
+      <div id="tokenTable" class="panel table-wrap"></div>
+    </section>
+
+    <section id="view-token" class="view"><div class="breadcrumbs">Security / Privileged Tokens / <b>SEC-04</b></div><div id="tokenDetail"></div></section>
+
+    <section id="view-meetings" class="view">
+      <div class="breadcrumbs">Workspace / <b data-i18n="meetings">Spotkania</b></div><div class="page-head"><div><h1 data-i18n="meetingArchive">ARCHIWUM SPOTKAŃ</h1><p data-i18n="meetingLead">Nagrania, transkrypcje i dane techniczne sesji.</p></div></div><div id="meetingCards" class="meeting-grid"></div>
+    </section>
+
+    <section id="view-meeting" class="view"><div class="breadcrumbs">Meetings / <b>Global Security Review</b></div><div id="meetingDetail"></div></section>
+
+    <section id="view-recovered" class="view">
+      <div class="breadcrumbs">Workspace / <b data-i18n="recovered">Odzyskane</b></div><div class="page-head"><div><h1 data-i18n="recoveredItems">ODZYSKANE ELEMENTY</h1><p data-i18n="recoveredLead">Materiały przywrócone z lokalnych kopii i pamięci aplikacji.</p></div></div><div id="recoveredFiles" class="panel table-wrap"></div>
+    </section>
+
+    <section id="view-search" class="view"><div class="breadcrumbs">Workspace / <b data-i18n="searchResults">Wyniki wyszukiwania</b></div><div class="page-head"><div><h1 id="searchTitle"></h1><p id="searchMeta"></p></div></div><div id="searchResults"></div></section>
+  </main>
+
+  <aside id="detailsPanel" class="details-panel" aria-hidden="true"><div class="details-head"><b data-i18n="details">SZCZEGÓŁY</b><button id="closeDetails">×</button></div><div id="detailsBody"></div></aside>
+  <footer><span>WORKSPACE: DC03-SECOPS</span><span>MODE: READ ONLY</span><span>SESSION: NW-ARCHIVE</span><button id="resetBtn" data-i18n="reset">RESETUJ SESJĘ</button></footer>
+</div>
+
+<dialog id="helpDialog"><form method="dialog"><div class="dialog-head"><b data-i18n="help">POMOC ARCHIWUM</b><button>×</button></div><div id="helpBody"></div><div class="dialog-actions"><button type="button" id="nextHint" class="secondary" data-i18n="nextHint">NASTĘPNA WSKAZÓWKA</button><button class="primary" data-i18n="close">ZAMKNIJ</button></div></form></dialog>
+<dialog id="resetDialog"><form method="dialog"><div class="dialog-head"><b data-i18n="reset">RESETUJ SESJĘ</b><button>×</button></div><p data-i18n="resetText">Usunąć lokalny postęp i wrócić do bramy archiwum?</p><div class="dialog-actions"><button value="cancel" class="secondary" data-i18n="cancel">ANULUJ</button><button id="confirmReset" class="danger" value="default" data-i18n="reset">RESETUJ</button></div></form></dialog>
+<script src="app.js"></script>
+</body></html>
